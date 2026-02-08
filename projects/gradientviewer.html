@@ -1,0 +1,116 @@
+<html>
+
+<head>
+    <title>Text Gradients</title>
+    <style>
+        .container {
+            position: relative;
+            width: 100%;
+        }
+
+        .header {
+            position: absolute;
+            left: 5%;
+            font-family: 'Segoe UI';
+            color: rgb(230, 230, 230);
+            font-size: xx-large;
+        }
+
+        .text {
+            position: absolute;
+            left: 5%;
+            font-family: 'Segoe UI';
+            color: rgb(230, 230, 230);
+            font-size: large;
+        }
+
+        .check {
+            position: absolute;
+            left: 5%;
+            font-family: 'Segoe UI';
+            color: rgb(231, 231, 231);
+            font-weight: bold;
+            font-size: large;
+        }
+
+        .buttons {
+            position: absolute;
+            left: 5%;
+            font-family: 'Segoe UI';
+            color: rgb(58, 58, 58);
+            background-color: #eeeeee; /* "EEEEEE" is very good color */
+            font-weight: bold;
+            font-size: large;
+        }
+    </style>
+</head>
+
+<body style="background-color: rgb(24, 24, 24);">
+    <p class="header">Gradient applier</p>
+    <p class="text" style="top: 80">This tool lets you view gradients in HTML without installing any applications.</p>
+        <input type="color" id="color1" style="position: absolute; left: 5%; font-family:'Segoe UI'; top:135;"></input>
+        <input type="color" id="color2" , style="position: absolute; left: 20%; font-family:'Segoe UI'; top:135;"
+            ,></input>
+    <p class="text" style="top: 117; left:99">>></p>
+    <div class="check" style="position: absolute; left: 5%; bottom: 60%; font-family: 'Segoe UI';">
+        <label><input id="boldSetting" type="checkbox"> Bold</label><br>
+        <label><input id="italicSetting" type="checkbox"> Italic</label><br>
+    </div>
+
+    <p class="header" id="gradient" style="
+            top: 140; background: linear-gradient(90deg, #ff0000, #00ff00);
+            -webkit-text-fill-color: transparent; -webkit-background-clip: text">
+        Website hackers are very dangerous</p>
+    <!-- Scwipt -->
+    <script>
+        const text = ["Website hackers are very dangerous"]
+        const grad = document.getElementById("gradient");
+    </script>
+    <script>
+        const clr1 = document.getElementById("color1");
+        const clr2 = document.getElementById("color2");
+
+        function updateGradient() {
+            grad.style.background = `linear-gradient(90deg, ${clr1.value}, ${clr2.value})`;
+            grad.style.webkitBackgroundClip = "text";
+            grad.style.webkitTextFillColor = "transparent";
+        }
+
+        clr1.addEventListener("input", updateGradient);
+        clr2.addEventListener("input", updateGradient);
+    </script>
+
+    <script>
+        const color1 = document.getElementById("color1");
+        const color2 = document.getElementById("color2");
+
+        const boldCheckbox = document.getElementById("boldSetting");
+        const italicCheckbox = document.getElementById("italicSetting");
+
+        function update() {
+            grad.style.background = `linear-gradient(90deg, ${color1.value}, ${color2.value})`;
+            grad.style.webkitBackgroundClip = "text";
+            grad.style.webkitTextFillColor = "transparent";
+
+            grad.style.fontWeight = boldCheckbox.checked ? "bold" : "normal";
+            grad.style.fontStyle = italicCheckbox.checked ? "italic" : "normal";
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+    </script>
+    <button id="randombutton" class="buttons" style="top: 41%">Pick a random one!</button>
+    <script>
+        const button = document.getElementById("randombutton");
+        button.addEventListener("click", () => {
+            let randomColor = '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+            clr1.value = randomColor;
+            randomColor = '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+            clr2.value = randomColor;
+        });
+    </script>
+
+</body>
+
+</html>
