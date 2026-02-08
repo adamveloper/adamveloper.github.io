@@ -1,0 +1,256 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Utillities</title>
+    <style>
+        .container {
+            position: relative;
+            width: 100%;
+        }
+
+        .header {
+            position: absolute;
+            left: 35;
+            font-family: 'Segoe UI';
+            color: rgb(230, 230, 230);
+            font-size: xx-large;
+        }
+
+        .text {
+            position: absolute;
+            left: 35;
+            font-family: 'Segoe UI';
+            color: rgb(230, 230, 230);
+            font-size: large;
+        }
+
+        .check {
+            position: absolute;
+            left: 35;
+            font-family: 'Segoe UI';
+            color: rgb(231, 231, 231);
+            font-weight: bold;
+            font-size: large;
+        }
+
+        .buttons {
+            position: absolute;
+            left: 35;
+            font-family: 'Segoe UI';
+            color: rgb(58, 58, 58);
+            background-color: #eeeeee;
+            /* "EEEEEE" is very good color */
+            font-weight: bold;
+            font-size: large;
+        }
+    </style>
+</head>
+
+<body style="background-color: rgb(24, 24, 24);">
+    <p class="header">Text utillities</p>
+    <p class="text" style="top: 65">utillities for text</p>
+    <textarea id="inputtext" class="text"
+        style="bottom:615px; color:black; width:300px; height:150px; font-size: small;"></textarea>
+    <button id="actionbutton" class="buttons" style="bottom:550px; color:black;font-size: small;">Do it!</button>
+    <p id="utillityshower" class="text" style="top: 90"> You are using utilllity --utill--.</p>
+    <div id="extraInputs"></div>
+    <ul id="utillitylist" class="text" style="top: 380">
+    </ul>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const utill = params.get("mode") ?? "reverse"
+        const inputel = document.getElementById("inputtext")
+        const buttonel = document.getElementById("actionbutton")
+        const container = document.getElementById('extraInputs');
+        const ExtraInput = document.getElementById("ExtraInput")
+        if (params.has("value")) inputel.value = decodeURIComponent(params.get("value"))
+
+        if (utill.toLowerCase() === "tolist") {
+            const separatorInput = document.createElement('input');
+            separatorInput.type = 'text';
+            separatorInput.id = 'ExtraInput'
+            separatorInput.placeholder = 'Enter separator';
+            separatorInput.style.width = '300px';
+            separatorInput.style.marginTop = '300px';
+            separatorInput.style.marginLeft = '27px';
+            container.appendChild(separatorInput);
+        } if (utill.toLowerCase() === "encode") {
+            let oldSelect = document.getElementById('ExtraInput');
+            if (oldSelect) oldSelect.remove();
+
+            const encodingSelect = document.createElement('select');
+            encodingSelect.id = 'ExtraInput';
+            encodingSelect.style.width = '300px';
+            encodingSelect.style.marginTop = '300px';
+            encodingSelect.style.marginLeft = '27px';
+
+            const defaultOption = document.createElement('option');
+            defaultOption.textContent = 'Select encoding';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            encodingSelect.appendChild(defaultOption);
+
+            const encodings = ['Base64', 'Binary', 'Hex', 'URL', 'JSON', 'ROT13'];
+            encodings.forEach(enc => {
+                const option = document.createElement('option');
+                option.value = enc.toLowerCase();
+                option.textContent = enc;
+                encodingSelect.appendChild(option);
+            });
+
+            container.appendChild(encodingSelect);
+        } if (utill.toLowerCase() === "decode") {
+            let oldSelect = document.getElementById('ExtraInput');
+            if (oldSelect) oldSelect.remove();
+
+            const encodingSelect = document.createElement('select');
+            encodingSelect.id = 'ExtraInput';
+            encodingSelect.style.width = '300px';
+            encodingSelect.style.marginTop = '300px';
+            encodingSelect.style.marginLeft = '27px';
+
+            const defaultOption = document.createElement('option');
+            defaultOption.textContent = 'Select encoding';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            encodingSelect.appendChild(defaultOption);
+
+            const encodings = ['Base64', 'Binary', 'Hex', 'URL', 'JSON', 'ROT13'];
+            encodings.forEach(enc => {
+                const option = document.createElement('option');
+                option.value = enc.toLowerCase();
+                option.textContent = enc;
+                encodingSelect.appendChild(option);
+            });
+
+            container.appendChild(encodingSelect);
+        }
+
+        document.getElementById("utillityshower").textContent = document.getElementById("utillityshower").textContent.replace("--utill--", utill)
+    </script>
+
+    <script>
+        const items = [
+            { 
+                "item": "reverse", 
+                "name": "Reverse a string" 
+            }, { 
+                "item": "tolist", 
+                "name": "String to list" 
+            }, { 
+                "item": "encode", 
+                "name": "Encode a string" 
+            }, { 
+                "item": "decode", 
+                "name": "Decode a string" 
+            }
+        ];
+        const ul = document.getElementById("utillitylist");
+        const currentUrl = window.location.origin + window.location.pathname;
+
+        ul.innerHTML = "";
+
+        items.forEach(item => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+
+            a.href = `${currentUrl}?mode=${encodeURIComponent(item.item)}&value=${encodeURIComponent(inputel.value)}`;
+            a.style.color = "#EEEEEE"
+            a.textContent = item.name;
+
+            li.appendChild(a);
+            ul.appendChild(li);
+        });
+        document.querySelectorAll('#utillitylist a').forEach(a => {
+            a.addEventListener('click', e => {
+                const currentValue = encodeURIComponent(inputel.value);
+                const url = new URL(a.href);
+                url.searchParams.set('value', currentValue);
+                a.href = url.toString(); // update the href before navigation
+            });
+        });
+    </script>
+
+    <script>
+        buttonel.addEventListener("click", () => {
+            if (utill.toLowerCase() === "reverse") {
+                inputel.value = String(inputel.value.split("").reverse().join(""))
+            } else if (utill.toLowerCase() === "tolist") {
+                const sep = document.getElementById('ExtraInput').value;
+                const arr = inputel.value.split(sep).map(s => s.trim());
+                inputel.value = JSON.stringify(arr);
+            } else if (utill.toLowerCase() === "encode") {
+                const encoding = document.getElementById('ExtraInput').value;
+                let text = inputel.value;
+
+                switch (encoding) {
+                    case 'base64':
+                        inputel.value = btoa(unescape(encodeURIComponent(text)));
+                        break;
+                    case 'binary':
+                        inputel.value = text.split('').map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+                        break;
+                    case 'hex':
+                        inputel.value = text.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+                        break;
+                    case 'url':
+                        inputel.value = encodeURIComponent(text);
+                        break;
+                    case 'json':
+                        try {
+                            inputel.value = JSON.stringify(text);
+                        } catch (e) {
+                            inputel.value = "ERROR: Invalid JSON";
+                        }
+                        break;
+                    case 'rot13':
+                        inputel.value = text.replace(/[a-zA-Z]/g, c =>
+                            String.fromCharCode(
+                                (c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+                            )
+                        );
+                        break;
+                    default:
+                        inputel.value = "SELECT AN ENCODING";
+                }
+            } else if (utill.toLowerCase() === "decode") {
+                const encoding = document.getElementById('ExtraInput').value;
+                let text = inputel.value;
+
+                switch (encoding) {
+                    case 'base64':
+                        inputel.value = decodeURIComponent(escape(atob(text)));
+                        break;
+                    case 'binary':
+                        inputel.value = text.split(' ').map(b => String.fromCharCode(parseInt(b, 2))).join('');
+                        break;
+                    case 'hex':
+                        inputel.value = text.match(/.{1,2}/g).map(h => String.fromCharCode(parseInt(h, 16))).join('');
+                        break;
+                    case 'url':
+                        inputel.value = decodeURIComponent(text);
+                        break;
+                    case 'json':
+                        try { inputel.value = JSON.parse(text) } catch(e) { inputel.value = "INVALID JSON" }
+                        break;
+                    case 'rot13':
+                        inputel.value = text.replace(/[a-zA-Z]/g, c =>
+                            String.fromCharCode(
+                                (c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+                            )
+                        );
+                        break;
+                    default:
+                        inputel.value = "SELECT AN ENCODING"
+                }
+            } else {
+                inputel.value = "INVALID UTILLITY";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
